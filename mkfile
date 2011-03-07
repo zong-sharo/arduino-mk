@@ -95,10 +95,8 @@ $BUILDDIR/sketch/%.cpp:: %.pde
 	echo '#include "WProgram.h"' > $target
 	cat $prereq >> $target
 
-$BUILDDIR/sketch/%.o:: %.pde
-	echo '#include "WProgram.h"' > $BUILDDIR/sketch/$prereq.cpp
-	cat $prereq >> $BUILDDIR/sketch/$prereq.cpp
-	$CXX $CXXFLAGS $BUILDDIR/sketch/$prereq.cpp -o $target $INCLUDE
+$BUILDDIR/sketch/%.o:: $BUILDDIR/sketch/%.cpp
+	$CXX $CXXFLAGS $prereq -o $target $INCLUDE
 
 $BUILDDIR/sketch/%.o:: %.c
 	$CC $CFLAGS $prereq -o $target $INCLUDE
