@@ -27,9 +27,22 @@ AVRDUDE_FLAGS = -C $ARDUINO_PATH/hardware/tools/avrdude.conf \
                 -U flash:w:$BUILDDIR/$PROJECT_NAME.hex:i \
 
 GENERIC_CFLAGS = -Os -mmcu=$MCU
-CFLAGS = $GENERIC_CFLAGS -w  -c  -g  -ffunction-sections  -fdata-sections  -DF_CPU=$F_CPU -DARDUINO=$ARDUINO_VER
-CXXFLAGS = $CFLAGS -fno-exceptions
-ELF_CFLAGS = $GENERIC_CFLAGS -Wl,--gc-section -Wl,-O1 -lm
+# do -w really are necessary here?
+CFLAGS         = $GENERIC_CFLAGS \
+               -c \
+               -g \
+               -w \
+               -ffunction-sections \
+               -fdata-sections \
+               -funsigned-char \
+               -funsigned-bitfields \
+               -fpack-struct \
+               -fshort-enums \
+               -DF_CPU=$F_CPU \
+               -DARDUINO=$ARDUINO_VER
+
+CXXFLAGS       = $CFLAGS -fno-exceptions
+ELF_CFLAGS     = $GENERIC_CFLAGS -Wl,--gc-section -Wl,-O1 -lm
 
 CC      = avr-gcc
 CXX     = avr-g++
@@ -82,32 +95,32 @@ $BUILDDIR/core/%.o:: $ARDUINO_CORE_DIR/%.cpp
 #libs
 arduino_libs:V: $ARDUINO_LIBS_BUILDDIRS $ARDUINO_LIBS_OBJ 
 
-$BUILDDIR/lib/%.o:: $ARDUINO_LIBS_BUILDDIRS $ARDUINO_LIBS_DIR/%.c
+$BUILDDIR/lib/%.o:: $ARDUINO_LIBS_DIR/%.c
 	$CC $CFLAGS $prereq -o $target -I$ARDUINO_LIBS_DIR/`echo $stem | cut -d '/' -f 1`/utility $INCLUDE
 
-$BUILDDIR/lib/%.o:: $ARDUINO_LIBS_BUILDDIRS $ARDUINO_LIBS_DIR/%.cpp
+$BUILDDIR/lib/%.o:: $ARDUINO_LIBS_DIR/%.cpp
 	$CXX $CXXFLAGS $prereq -o $target -I$ARDUINO_LIBS_DIR/`echo $stem | cut -d '/' -f 1`/utility $INCLUDE
 
 #sketch
 sketch:V: $BUILDDIR/sketch $SKETCH_OBJ
 
-$BUILDDIR/sketch/%.cpp:: %.pde
+$BUILDDIR/sketch/%.cpp:: &.pde
 	echo '#include "WProgram.h"' > $target
 	cat $prereq >> $target
 
 $BUILDDIR/sketch/%.o:: $BUILDDIR/sketch/%.cpp
 	$CXX $CXXFLAGS $prereq -o $target $INCLUDE
 
-$BUILDDIR/sketch/%.o:: %.c
+$BUILDDIR/sketch/%.o:: &.c
 	$CC $CFLAGS $prereq -o $target $INCLUDE
 
-$BUILDDIR/sketch/%.o:: %.cpp
+$BUILDDIR/sketch/%.o:: &.cpp
 	$CC $CFLAGS $prereq -o $target $INCLUDE
 
 #hex
 hex:V: $BUILDDIR/$PROJECT_NAME.hex checksize
 
-$BUILDDIR/$PROJECT_NAME.elf:: arduino_core $ARDUINO_LIBS_OBJ sketch
+$BUILDDIR/$PROJECT_NAME.elf:: arduino_core arduino_libs sketch
 	$CC $ELF_CFLAGS -o $target \
 		$ARDUINO_LIBS_OBJ $SKETCH_OBJ $BUILDDIR/core.a \
 		-L$BUILDDIR
