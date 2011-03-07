@@ -4,3 +4,5 @@ asm code
 spi interface
 serial monitor - most important imo
 wiring-less (no core)
+main.cpp-less
+external libraries support
