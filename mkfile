@@ -93,7 +93,9 @@ $BUILDDIR/core/%.o:: $ARDUINO_CORE_DIR/%.cpp
 	$CXX $CXXFLAGS $prereq -o $target -I$ARDUINO_CORE_DIR
 
 #libs
-arduino_libs:V: $ARDUINO_LIBS_BUILDDIRS $ARDUINO_LIBS_OBJ 
+arduino_libs:VQ: $ARDUINO_LIBS_BUILDDIRS $ARDUINO_LIBS_OBJ 
+    # dummy in case of no libs
+    true
 
 $BUILDDIR/lib/%.o:: $ARDUINO_LIBS_DIR/%.c
 	$CC $CFLAGS $prereq -o $target -I$ARDUINO_LIBS_DIR/`echo $stem | cut -d '/' -f 1`/utility $INCLUDE
