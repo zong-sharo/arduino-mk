@@ -10,7 +10,7 @@ ARDUINO_LIBS_DIR = $ARDUINO_PATH/libraries
 PROJECT_NAME = `{basename `pwd`}
 BUILDDIR = build
 
-INCLUDE = -I$ARDUINO_CORE_DIR `{for lib in $ARDUINO_LIBS; do echo -I$ARDUINO_LIBS_DIR/$lib; done}
+INCLUDE = -I$ARDUINO_CORE_DIR -I. `{for lib in $ARDUINO_LIBS; do echo -I$ARDUINO_LIBS_DIR/$lib; done}
 
 BOARDS_DB = $ARDUINO_PATH/hardware/arduino/boards.txt
 F_CPU    = `{sed -nr "s/^$BOARD\.build\.f_cpu=(.+)/\1/p"         $BOARDS_DB }
