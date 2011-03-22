@@ -1,2 +1,4 @@
 an arduino mkfile. can be used as arduino ide replacement.
 mkfiles is executed by mk - http://man.cat-v.org/plan_9/1/mk
+
+in case of need you can override most of the internals variables in mkfile.rc

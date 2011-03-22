@@ -1,5 +1,5 @@
 MKSHELL=bash
-# easy way to terminate build process
+# easy way to terminate build process if no mkfile.rc is present
 <| cat mkfile.rc
 
 build:V: gcc-check hex
@@ -51,6 +51,8 @@ OBJCOPY = avr-objcopy
 SIZE    = avr-size
 AVRDUDE = avrdude
 
+# double inclusion allows to override internal variables if necessary
+<mkfile.rc
 
 ARDUINO_CORE_OBJ = `{ ls $ARDUINO_CORE_DIR | sed -nr "s?(.*)\.(cpp|c)\$?$BUILDDIR/core/\1.o?p"}
 ARDUINO_LIBS_BUILDDIRS = `{for lib in $ARDUINO_LIBS; do echo $BUILDDIR/lib/$lib; echo $BUILDDIR/lib/$lib/utility; done}
