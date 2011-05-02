@@ -69,7 +69,9 @@ $BUILDDIR/core $ARDUINO_LIBS_BUILDDIRS $BUILDDIR/sketch $BUILDDIR/::
 	mkdir -p $target
 
 gcc-check:VQ:
-    if [[ "$($CC -v 2>&1 | tail -n1 | cut -f 3 -d " " | cut -c1-3)" > "4.3" && -n $(echo "$BOARD" | grep mega) && -z "$NO_GCC_CHECK" ]] ; then
+    if [[ "$($CC -v 2>&1 | tail -n1 | cut -f 3 -d " " | cut -c1-3)" > "4.3" && \
+          "$($CC -v 2>&1 | tail -n1 | cut -f 3 -d " " | cut -c1-3)" < "4.7" && \
+          -n $(echo "$BOARD" | grep mega) && -z "$NO_GCC_CHECK" ]] ; then
         echo "your version of gcc is known to produce broken code for mega and mega2560 boards"
         echo "please consider downgrade of your gcc or applying the patch"
         echo 
@@ -79,6 +81,7 @@ gcc-check:VQ:
         echo "http://www.arduino.cc/cgi-bin/yabb2/YaBB.pl?num=1276727004/15"
         echo
         echo "to disable this check add NO_GCC_CHECK=1 to your mkfile.rc"
+        echo "(make sure you applied revelant patches first)"
         exit 1
     fi
 
