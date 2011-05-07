@@ -39,7 +39,8 @@ CFLAGS         = $GENERIC_CFLAGS \
                -fpack-struct \
                -fshort-enums \
                -DF_CPU=$F_CPU \
-               -DARDUINO=$ARDUINO_VER
+               -DARDUINO=$ARDUINO_VER \
+               $CFLAGS_EXTRA
 
 CXXFLAGS       = $CFLAGS -fno-exceptions
 ELF_CFLAGS     = $GENERIC_CFLAGS -Wl,--gc-section -Wl,-O1 -lm

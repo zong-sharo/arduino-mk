@@ -3,3 +3,4 @@ ARDUINO_PATH = /usr/share/arduino-0022
 ARDUINO_LIBS = Ethernet SPI
 BOARD = mega2560
 TTYDEV = /dev/ttyACM0
+#CFLAGS_EXTRA =
