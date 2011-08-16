@@ -2,6 +2,11 @@ MKSHELL=bash
 # easy way to terminate build process if no mkfile.rc is present
 <| cat mkfile.rc
 
+all:Q:
+    [ -f mkfile.pre ] && mk -f mkfile.pre || true
+    mk build
+    [ -f mkfile.post ] && mk -f mkfile.post || true
+
 build:V: gcc-check hex
 
 ARDUINO_CORE_DIR = $ARDUINO_PATH/hardware/arduino/cores/arduino
