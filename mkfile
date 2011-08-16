@@ -94,7 +94,7 @@ gcc-check:VQ:
 #core
 arduino_core:V: $BUILDDIR/core $BUILDDIR/core.a
 
-$BUILDDIR/core.a: $ARDUINO_CORE_OBJ
+$BUILDDIR/core.a:: $ARDUINO_CORE_OBJ
 	$AR rcs $BUILDDIR/core.a $BUILDDIR/core/*.o
 
 $BUILDDIR/core/%.o:: $ARDUINO_CORE_DIR/%.c
@@ -158,6 +158,12 @@ upload:VQ: hex
 	stty -F $TTYDEV hupcl
 	$AVRDUDE $AVRDUDE_FLAGS
 
-nuke:V: clean
-clean:V:
+clean:V: nuke
+nuke:V: nuke_pre nuke_post
 	rm -rf $BUILDDIR
+
+nuke_pre:VQ:
+    [ -f mkfile.pre ] && mk -f mkfile.pre nuke || true
+
+nuke_post:VQ:
+    [ -f mkfile.post ] && mk -f mkfile.post nuke || true
