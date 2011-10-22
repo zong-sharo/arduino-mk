@@ -43,6 +43,7 @@ CFLAGS         = $GENERIC_CFLAGS \
                -funsigned-bitfields \
                -fpack-struct \
                -fshort-enums \
+               -ffreestanding \
                -DF_CPU=$F_CPU \
                -DARDUINO=$ARDUINO_VER \
                $CFLAGS_EXTRA
